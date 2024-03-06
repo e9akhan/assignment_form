@@ -42,7 +42,7 @@ def add_course(request):
     return render(
         request,
         "forms/form.html",
-        {"form": form, "title": "Add Student", "header": "Add Student"},
+        {"form": form, "title": "Add Course", "header": "Add Course"},
     )
 
 
@@ -61,5 +61,5 @@ def add_enrollment(request):
     return render(
         request,
         "forms/form.html",
-        {"form": form, "title": "Add Student", "header": "Add Student"},
+        {"form": form, "title": "Add Enrollment", "header": "Enroll a Student"},
     )

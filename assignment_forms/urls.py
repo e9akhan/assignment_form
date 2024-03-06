@@ -17,7 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from books.views import add_book
+from books.views import AddBookView
 from car.views import add_car
 from song.views import add_song
 from movie.views import add_movie
@@ -29,7 +29,7 @@ from enrollment.views import add_course, add_student, add_enrollment
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("book/", add_book, name="book"),
+    path("book/", AddBookView.as_view(), name="book"),
     path("car/", add_car, name="car"),
     path("song/", add_song, name="song"),
     path("movie/", add_movie, name="movie"),
