@@ -2,7 +2,7 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from task.forms import ProjectForm, TaskForm
 
@@ -23,7 +23,12 @@ def add_task(request):
     return render(
         request,
         "forms/form.html",
-        {"form": form, "title": "Add Task", "header": "Add Task"},
+        {
+            "form": form,
+            "title": "Add Task",
+            "header": "Add Task",
+            "fk_urls": ["project"],
+        },
     )
 
 
@@ -36,6 +41,10 @@ def add_project(request):
 
         if form.is_valid():
             form.save()
+
+            if request.GET.get("next", []):
+                return redirect(request.GET["next"])
+
             return HttpResponse("Project added.")
 
     form = ProjectForm()

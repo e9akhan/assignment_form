@@ -3,11 +3,19 @@
 """
 
 from django.views.generic import CreateView
+from django.shortcuts import render
 from django.http import HttpResponse
 from books.forms import BookForm
 
 
 # Create your views here.
+def home(request):
+    """
+    Homepage.
+    """
+    return render(request, "forms/homepage.html")
+
+
 class AddBookView(CreateView):
     """
     Add Book View.

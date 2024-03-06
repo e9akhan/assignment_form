@@ -2,7 +2,7 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from product.forms import CategoryForm, ProductForm
 
@@ -17,6 +17,10 @@ def add_product_category(request):
 
         if form.is_valid():
             form.save()
+
+            if request.GET.get("next", []):
+                return redirect(request.GET["next"])
+
             return HttpResponse("Category added.")
 
     form = CategoryForm()
@@ -42,5 +46,10 @@ def add_product(request):
     return render(
         request,
         "forms/form.html",
-        {"form": form, "title": "Add Product", "header": "Add Product"},
+        {
+            "form": form,
+            "title": "Add Product",
+            "header": "Add Product",
+            "fk_urls": ["product_category"],
+        },
     )

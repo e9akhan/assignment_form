@@ -2,7 +2,7 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from post.forms import CategoryForm, PostForm
 
@@ -17,6 +17,10 @@ def add_post_category(request):
 
         if form.is_valid():
             form.save()
+
+            if request.GET.get("next", []):
+                return redirect(request.GET["next"])
+
             return HttpResponse("Category Added.")
 
     form = CategoryForm()
@@ -42,5 +46,10 @@ def add_post(request):
     return render(
         request,
         "forms/form.html",
-        {"form": form, "title": "Add Post", "header": "Add Post"},
+        {
+            "form": form,
+            "title": "Add Post",
+            "header": "Add Post",
+            "fk_urls": ["post_category"],
+        },
     )

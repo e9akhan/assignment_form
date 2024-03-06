@@ -2,64 +2,93 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.views.generic import FormView
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from enrollment.forms import StudentForm, CourseForm, EnrollmentForm
 
 
 # Create your views here.
-def add_student(request):
+class AddStudent(FormView):
     """
-    Add student view.
+    Add Student View.
     """
-    if request.method == "POST":
-        form = StudentForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Student added.")
+    template_name = "forms/form.html"
+    form_class = StudentForm
 
-    form = StudentForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Student", "header": "Add Student"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+
+        if self.request.GET.get("next", []):
+            return redirect(self.request.GET["next"])
+
+        return HttpResponse("Student added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        Get context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Student"
+        context["header"] = "Add Student"
+        return context
 
 
-def add_course(request):
+class AddCourse(FormView):
     """
-    Add course view.
+    Add Course View.
     """
-    if request.method == "POST":
-        form = CourseForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Course added.")
+    template_name = "forms/form.html"
+    form_class = CourseForm
 
-    form = CourseForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Course", "header": "Add Course"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+
+        if self.request.GET.get("next", []):
+            return redirect(self.request.GET["next"])
+
+        return HttpResponse("Course added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        Get context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Course"
+        context["header"] = "Add Course"
+        return context
 
 
-def add_enrollment(request):
+class Enrollment(FormView):
     """
-    Add enrollment view.
+    Enrollment.
     """
-    if request.method == "POST":
-        form = EnrollmentForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Enrollment added.")
+    template_name = "forms/form.html"
+    form_class = EnrollmentForm
 
-    form = EnrollmentForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Enrollment", "header": "Enroll a Student"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Enrolled.")
+
+    def get_context_data(self, **kwargs):
+        """
+        Get context data.
+        """
+
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Enroll"
+        context["header"] = "Enroll"
+        context["fk_urls"] = ["student", "course"]
+        return context

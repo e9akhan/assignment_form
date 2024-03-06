@@ -2,26 +2,32 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.views.generic import FormView
 from django.http import HttpResponse
 from car.forms import CarForm
 
 
 # Create your views here.
-def add_car(request):
+class AddCarView(FormView):
     """
-    Add car view.
+    Add Car View
     """
-    if request.method == "POST":
-        form = CarForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Car successfully created.")
+    template_name = "forms/form.html"
+    form_class = CarForm
 
-    form = CarForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Car", "header": "Add Car"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Car successfully added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        Get context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Car"
+        context["header"] = "Add Car"
+        return context
