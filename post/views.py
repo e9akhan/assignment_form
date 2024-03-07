@@ -2,54 +2,63 @@
     Module name :- views.
 """
 
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+from django.views.generic import FormView
 from django.http import HttpResponse
 from post.forms import CategoryForm, PostForm
 
 
 # Create your views here.
-def add_post_category(request):
+class AddPostCategory(FormView):
     """
-    Add Post Category view.
+    Post Category View.
     """
-    if request.method == "POST":
-        form = CategoryForm(request.POST)
 
-        if form.is_valid():
-            form.save()
+    template_name = "forms/form.html"
+    form_class = CategoryForm
 
-            if request.GET.get("next", []):
-                return redirect(request.GET["next"])
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
 
-            return HttpResponse("Category Added.")
+        if self.request.GET.get("next", []):
+            return redirect(self.request.GET["next"])
 
-    form = CategoryForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Category", "header": "Add Category"},
-    )
+        return HttpResponse("Category successfully added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Category"
+        context["header"] = "Add Category"
+        return context
 
 
-def add_post(request):
+class AddPost(FormView):
     """
-    Post view.
+    Post View.
     """
-    if request.method == "POST":
-        form = PostForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Post added.")
+    template_name = "forms/form.html"
+    form_class = PostForm
 
-    form = PostForm()
-    return render(
-        request,
-        "forms/form.html",
-        {
-            "form": form,
-            "title": "Add Post",
-            "header": "Add Post",
-            "fk_urls": ["post_category"],
-        },
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Post added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Post"
+        context["header"] = "Add Post"
+        context["fk_urls"] = ["post_category"]
+        return context

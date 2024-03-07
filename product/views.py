@@ -2,54 +2,63 @@
     Module name :- views.
 """
 
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+from django.views.generic import FormView
 from django.http import HttpResponse
 from product.forms import CategoryForm, ProductForm
 
 
 # Create your views here.
-def add_product_category(request):
+class AddProductCategory(FormView):
     """
-    Add product category view.
+    Add Product Category View.
     """
-    if request.method == "POST":
-        form = CategoryForm(request.POST)
 
-        if form.is_valid():
-            form.save()
+    template_name = "forms/form.html"
+    form_class = CategoryForm
 
-            if request.GET.get("next", []):
-                return redirect(request.GET["next"])
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
 
-            return HttpResponse("Category added.")
+        if self.request.GET.get("next", []):
+            return redirect(self.request.GET["next"])
 
-    form = CategoryForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Category", "header": "Add Category"},
-    )
+        return HttpResponse("Category added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Category"
+        context["header"] = "Add Category"
+        return context
 
 
-def add_product(request):
+class AddProduct(FormView):
     """
-    Add product view.
+    Add Product View
     """
-    if request.method == "POST":
-        form = ProductForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Product successfully added.")
+    template_name = "forms/form.html"
+    form_class = ProductForm
 
-    form = ProductForm()
-    return render(
-        request,
-        "forms/form.html",
-        {
-            "form": form,
-            "title": "Add Product",
-            "header": "Add Product",
-            "fk_urls": ["product_category"],
-        },
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Product successfully added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Product"
+        context["header"] = "Add Product"
+        context["fk_urls"] = ["product_category"]
+        return context

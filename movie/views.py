@@ -2,26 +2,32 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.views.generic import FormView
 from django.http import HttpResponse
 from movie.forms import MovieForm
 
 
 # Create your views here.
-def add_movie(request):
+class AddMovie(FormView):
     """
-    Movie view.
+    Add Movie View.
     """
-    if request.method == "POST":
-        form = MovieForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Movie successfully added.")
+    template_name = "forms/form.html"
+    form_class = MovieForm
 
-    form = MovieForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Movie", "header": "Add Movie"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Movie successfully added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Movie"
+        context["header"] = "Add Movie"
+        return context

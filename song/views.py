@@ -2,26 +2,32 @@
     Module name :- views
 """
 
-from django.shortcuts import render
+from django.views.generic import FormView
 from django.http import HttpResponse
 from song.forms import SongForm
 
 
 # Create your views here.
-def add_song(request):
+class AddSong(FormView):
     """
-    Song view.
+    Add Song View.
     """
-    if request.method == "POST":
-        form = SongForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Song successfully added.")
+    template_name = "forms/form.html"
+    form_class = SongForm
 
-    form = SongForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Song", "header": "Add Song"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Song successfully added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Song"
+        context["header"] = "Add Song"
+        return context

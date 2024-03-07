@@ -19,12 +19,12 @@ from django.contrib import admin
 from django.urls import path
 from books.views import AddBookView, home
 from car.views import AddCarView
-from song.views import add_song
-from movie.views import add_movie
-from job_posting.views import add_job
-from product.views import add_product, add_product_category
-from task.views import add_task, add_project
-from post.views import add_post, add_post_category
+from song.views import AddSong
+from movie.views import AddMovie
+from job_posting.views import AddJobPost
+from product.views import AddProduct, AddProductCategory
+from task.views import AddTask, AddProject
+from post.views import AddPost, AddPostCategory
 from enrollment.views import AddStudent, AddCourse, Enrollment
 
 urlpatterns = [
@@ -32,15 +32,15 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("book/", AddBookView.as_view(), name="book"),
     path("car/", AddCarView.as_view(), name="car"),
-    path("song/", add_song, name="song"),
-    path("movie/", add_movie, name="movie"),
-    path("job/", add_job, name="job"),
-    path("product/", add_product, name="product"),
-    path("product/category/", add_product_category, name="product_category"),
-    path("task/", add_task),
-    path("project/", add_project, name="project"),
-    path("post/", add_post),
-    path("post/category/", add_post_category, name="post_category"),
+    path("song/", AddSong.as_view(), name="song"),
+    path("movie/", AddMovie.as_view(), name="movie"),
+    path("job/", AddJobPost.as_view(), name="job"),
+    path("product/", AddProduct.as_view(), name="product"),
+    path("product/category/", AddProductCategory.as_view(), name="product_category"),
+    path("task/", AddTask.as_view()),
+    path("project/", AddProject.as_view(), name="project"),
+    path("post/", AddPost.as_view()),
+    path("post/category/", AddPostCategory.as_view(), name="post_category"),
     path("student/", AddStudent.as_view(), name="student"),
     path("course/", AddCourse.as_view(), name="course"),
     path("enrollment/", Enrollment.as_view()),

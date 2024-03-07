@@ -2,26 +2,32 @@
     Module name :- views.
 """
 
-from django.shortcuts import render
+from django.views.generic import FormView
 from django.http import HttpResponse
 from job_posting.forms import JobPostForm
 
 
 # Create your views here.
-def add_job(request):
+class AddJobPost(FormView):
     """
-    Job Post view.
+    Add Job Post View.
     """
-    if request.method == "POST":
-        form = JobPostForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Job successfully posted.")
+    template_name = "forms/form.html"
+    form_class = JobPostForm
 
-    form = JobPostForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Post a Job", "header": "Create a Job Post"},
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Job successfully posted.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Post a Job"
+        context["header"] = "Create a Job Post"
+        return context

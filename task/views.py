@@ -2,54 +2,63 @@
     Module name :- views.
 """
 
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
+from django.views.generic import FormView
 from django.http import HttpResponse
 from task.forms import ProjectForm, TaskForm
 
 
 # Create your views here.
-def add_task(request):
+class AddTask(FormView):
     """
-    Add task view.
+    Add Task View.
     """
-    if request.method == "POST":
-        form = TaskForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Task added.")
+    template_name = "forms/form.html"
+    form_class = TaskForm
 
-    form = TaskForm()
-    return render(
-        request,
-        "forms/form.html",
-        {
-            "form": form,
-            "title": "Add Task",
-            "header": "Add Task",
-            "fk_urls": ["project"],
-        },
-    )
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
+        return HttpResponse("Task added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Task."
+        context["header"] = "Add Task"
+        context["fk_urls"] = ["project"]
+        return context
 
 
-def add_project(request):
+class AddProject(FormView):
     """
-    Add project view.
+    Add Project View.
     """
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
 
-        if form.is_valid():
-            form.save()
+    template_name = "forms/form.html"
+    form_class = ProjectForm
 
-            if request.GET.get("next", []):
-                return redirect(request.GET["next"])
+    def form_valid(self, form):
+        """
+        Form valid.
+        """
+        form.save()
 
-            return HttpResponse("Project added.")
+        if self.request.GET.get("next", []):
+            return redirect(self.request.GET["next"])
 
-    form = ProjectForm()
-    return render(
-        request,
-        "forms/form.html",
-        {"form": form, "title": "Add Project", "header": "Add Project"},
-    )
+        return HttpResponse("Project added.")
+
+    def get_context_data(self, **kwargs):
+        """
+        get_context_data.
+        """
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add Project"
+        context["header"] = "Add Project"
+        return context
