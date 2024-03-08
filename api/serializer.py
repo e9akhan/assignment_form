@@ -110,7 +110,7 @@ class CourseSerializer(serializers.ModelSerializer):
         extra_kwargs = {"id": {"read_only": True}}
 
 
-class JobPostSerializer(serializers.HyperlinkedModelSerializer):
+class JobPostSerializer(serializers.ModelSerializer):
     """
     Job Post Serializer.
     """
