@@ -5,6 +5,9 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
 
 from books.models import Book
 from car.models import Car
@@ -32,6 +35,29 @@ from api.serializer import (
 )
 
 # Create your views here.
+
+
+@api_view(["GET"])
+def api_root(request, fmt=None):
+    """
+    API Root View.
+    """
+    return Response(
+        {
+            "books": reverse("book-list", request=request, format=fmt),
+            "cars": reverse("car-list", request=request, format=fmt),
+            "enrollments": reverse("enrollment-list", request=request, format=fmt),
+            "students": reverse("student-list", request=request, format=fmt),
+            "courses": reverse("course-list", request=request, format=fmt),
+            "jobs": reverse("job-list", request=request, format=fmt),
+            "movies": reverse("movie-list", request=request, format=fmt),
+            "posts": reverse("post-list", request=request, format=fmt),
+            "products": reverse("product-list", request=request, format=fmt),
+            "songs": reverse("song-list", request=request, format=fmt),
+            "tasks": reverse("task-list", request=request, format=fmt),
+            "projects": reverse("project-list", request=request, format=fmt),
+        }
+    )
 
 
 class BookListCreate(ListCreateAPIView):

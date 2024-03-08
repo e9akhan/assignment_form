@@ -31,9 +31,11 @@ from api.views import (
     TaskDetail,
     ProjectList,
     ProjectDetail,
+    api_root,
 )
 
 urlpatterns = [
+    path("", api_root, name="root"),
     path("books/", BookListCreate.as_view(), name="book-list"),
     path("book/<int:pk>/", BookDetail.as_view(), name="book-detail"),
     path("cars/", CarList.as_view(), name="car-list"),
